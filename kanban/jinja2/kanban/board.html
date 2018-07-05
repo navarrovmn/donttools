@@ -43,62 +43,66 @@
 
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
     Launch demo modal
-    
 </button>
-  
+
 <!-- Modal -->
 <div class="modal fade" id="modalDetail" tabindex="-1" role="dialog" aria-labelledby="modalDetailLabel" aria-hidden="true">
 <div class="modal-dialog" role="document">
     <div class="modal-content">
     <div class="modal-header">
-        <h5 class="modal-title" id="modalDetailLabel">Modal title</h5>
+        <h5 class="modal-title" id="modalDetailLabel">Issue</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="modal-body">
-        
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-            Close
-        </button>
+        <div class="form-group">
+            <label>Title</label>
+            <input type="text" class="form-control" rows="2" autofocus></input>
+        </div>
+
+        <div class="form-group">
+            <label>Description</label>
+            <textarea class="form-control" rows="2" autofocus></textarea>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-xs pull-right">Submit</button>
+        </div>
     </div>
     </div>
 </div>
-</div>  
+</div>
 
 
 <script src="../../static/js/jkanban.min.js"></script>
 <script>
 
 $()
-
-
 var KanbanTest = new jKanban({
     element: '#myKanban',
     gutter: '10px',
     widthBoard: '450px',
     click: function (el) {
-        $('#modalDetail').modal();
+        // $('#modalDetail').modal();
     },
+
     buttonClick: function (el, boardId) {
-        console.log(el);
-        console.log(boardId);
-        // create a form to enter element 
+        // $('#modalDetail').modal();
+
         var formItem = document.createElement('form');
         formItem.setAttribute("class", "itemform");
         formItem.innerHTML = '<div class="form-group"><textarea class="form-control" rows="2" autofocus></textarea></div><div class="form-group"><button type="submit" class="btn btn-primary btn-xs pull-right">Submit</button><button type="button" id="CancelBtn" class="btn btn-default btn-xs pull-right">Cancel</button></div>'
-
         KanbanTest.addForm(boardId, formItem);
+
         formItem.addEventListener("submit", function (e) {
             e.preventDefault();
             var text = e.target[0].value
             KanbanTest.addElement(boardId, {
-                "title": text,
+                "title": "Title",
+                "description": text,
             })
             formItem.parentNode.removeChild(formItem);
-            // ajax post aqui
         });
         document.getElementById('CancelBtn').onclick = function () {
             formItem.parentNode.removeChild(formItem)
@@ -121,8 +125,9 @@ var KanbanTest = new jKanban({
                         console.log("END DRAG: " + el.dataset.eid);
                         // ajax put aqui
                     },
-                    "drop": function(el){
+                    "drop": function(el, dest){
                         console.log('DROPPED: ' + el.dataset.eid )
+                        console.log('dest' + el)
                     }
                 },
             ]
