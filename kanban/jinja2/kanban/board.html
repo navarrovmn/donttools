@@ -4,6 +4,11 @@
     <h1>Board!</h1>
     {% for issue in issues %}
         <p>{{issue.title}}</p>
+        {% if issue.image  %}
+            <a href="#">
+                <img class="img-responsive" src='{{ issue.image.url }}' alt="">
+            </a>       
+        {% endif %}
     {% endfor %}
     {{ super() }}
 {% endblock %}

@@ -1,5 +1,5 @@
 from django.db import models
-
+from PIL import Image
 
 class Board(models.Model):
     title = models.CharField(max_length=140)
@@ -16,6 +16,7 @@ class Issue(models.Model):
     ]
     KIND_MAP = dict(KIND_CHOICES)
 
+    image = models.ImageField(null=True)
     board = models.ForeignKey(Board, related_name='issues', on_delete=models.CASCADE)
     title = models.CharField(max_length=140)
     kind = models.PositiveIntegerField(choices=KIND_CHOICES)

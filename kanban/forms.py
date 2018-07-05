@@ -11,4 +11,4 @@ class IssueEditForm(forms.ModelForm):
 class IssueCreateForm(forms.ModelForm):
     class Meta:
         model = Issue
-        fields = ['title', 'kind', 'description']
+        fields = ['title', 'kind', 'description', 'image']
