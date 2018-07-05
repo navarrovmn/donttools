@@ -2,5 +2,8 @@
 
 {% block body %}
     <h1>Board!</h1>
+    {% for issue in issues %}
+        <p>{{issue.title}}</p>
+    {% endfor %}
     {{ super() }}
 {% endblock %}

@@ -16,8 +16,12 @@ def board(request, path):
 
     Oculta as issues escondidas.
     """
+    board = board_from_path(path)
+    issues = Issue.objects.filter(board=board, is_active=True)
+    
     ctx = {
-        'board': board_from_path(path),
+        'board': board,
+        'issues': issues,
     }
     return render(request, 'kanban/board.html', ctx)
 
