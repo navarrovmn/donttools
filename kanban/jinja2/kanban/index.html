@@ -1,6 +1,18 @@
 {% extends 'base.html' %}
 
 {% block body %}
-    <h1>Kanban!</h1>
-    {{ super() }}
+    <h1 class="title">Don't Kanban!</h1>
+    <h3 class="subtitle">Develop by Prog Web's team</h3>
+    <div class="textarea-div">
+        <input class="text-index" placeholder=" Insert your Kanban"  id ="input-url"></textarea>
+        <button class="button-index" id="button-go">GO</button>
+    </div>
+
+    <script>
+        $("#button-go").on("click", function() {
+            window.location.pathname = $('#input-url').val();
+        });
+    </script>
 {% endblock %}
+
+
