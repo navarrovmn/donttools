@@ -4,6 +4,10 @@ from PIL import Image
 class Board(models.Model):
     title = models.CharField(max_length=140)
 
+    def __str__(self):
+        return self.title
+
+
 
 class Issue(models.Model):
     KIND_TODO = 0
@@ -16,10 +20,17 @@ class Issue(models.Model):
     ]
     KIND_MAP = dict(KIND_CHOICES)
 
-    image = models.ImageField(null=True)
+    image = models.ImageField(null=True, blank=True)
     board = models.ForeignKey(Board, related_name='issues', on_delete=models.CASCADE)
     title = models.CharField(max_length=140)
     kind = models.PositiveIntegerField(choices=KIND_CHOICES)
     kind_name = property(lambda self: self.kind_display())
     description = models.TextField()
     is_active = models.BooleanField()
+
+    class Meta:
+        unique_together = [('title', 'board')]
+
+    def __str__(self):
+        return self.title
+    

@@ -13,6 +13,7 @@ else:
 urlpatterns = [
     *urlpatterns,
     path('', views.index),
+    path("_update_kind/", views.update_kind),
     re_path(r'^(?P<path>[\w_-]+)$', views.board),
     re_path(r'^(?P<path>[\w_-]+)+/done/$', views.done),
     re_path(r'^(?P<path>[\w_-]+)+/issue/$', views.create_issue),
