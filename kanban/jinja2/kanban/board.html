@@ -1,6 +1,193 @@
 {% extends 'base.html' %}
 
 {% block body %}
-    <h1>Board!</h1>
+    <h1>Board!fdas</h1>
     {{ super() }}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Title</title>
+    <link rel="stylesheet" href="../../static/css/jkanban.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+
+    <style>
+    </style>
+</head>
+<body>
+<div id="myKanban"></div>
+
+
+<!-- <button id="addDefault">Add "Default" board</button>
+<br> -->
+
+<button id="addToDo">Add element in "To Do" Board</button>
+<br>
+
+<!-- <button id="removeBoard">Remove "Done" Board</button>
+<br> -->
+
+<!-- <button id="removeElement">Remove "My Task Test"</button>
+<br> -->
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+    Launch demo modal
+    
+</button>
+  
+<!-- Modal -->
+<div class="modal fade" id="modalDetail" tabindex="-1" role="dialog" aria-labelledby="modalDetailLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="modalDetailLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Close
+        </button>
+    </div>
+    </div>
+</div>
+</div>  
+
+
+<script src="../../static/js/jkanban.min.js"></script>
+<script>
+
+$()
+
+
+var KanbanTest = new jKanban({
+    element: '#myKanban',
+    gutter: '10px',
+    widthBoard: '450px',
+    click: function (el) {
+        $('#modalDetail').modal();
+    },
+    buttonClick: function (el, boardId) {
+        console.log(el);
+        console.log(boardId);
+        // create a form to enter element 
+        var formItem = document.createElement('form');
+        formItem.setAttribute("class", "itemform");
+        formItem.innerHTML = '<div class="form-group"><textarea class="form-control" rows="2" autofocus></textarea></div><div class="form-group"><button type="submit" class="btn btn-primary btn-xs pull-right">Submit</button><button type="button" id="CancelBtn" class="btn btn-default btn-xs pull-right">Cancel</button></div>'
+
+        KanbanTest.addForm(boardId, formItem);
+        formItem.addEventListener("submit", function (e) {
+            e.preventDefault();
+            var text = e.target[0].value
+            KanbanTest.addElement(boardId, {
+                "title": text,
+            })
+            formItem.parentNode.removeChild(formItem);
+            // ajax post aqui
+        });
+        document.getElementById('CancelBtn').onclick = function () {
+            formItem.parentNode.removeChild(formItem)
+        }
+    },
+    addItemButton: true,
+    boards: [
+        {
+            "id": "_todo",
+            "title": "To Do",
+            "class": "info",
+            "item": [
+                {
+                    "id": "_test_delete",
+                    "title": "First task",
+                    "drag": function (el, source) {
+                        console.log("START DRAG: " + el.dataset.eid);
+                    },
+                    "dragend": function (el) {
+                        console.log("END DRAG: " + el.dataset.eid);
+                        // ajax put aqui
+                    },
+                    "drop": function(el){
+                        console.log('DROPPED: ' + el.dataset.eid )
+                    }
+                },
+            ]
+        },
+        {
+            "id": "_doing",
+            "title": "Doing",
+            "class": "warning",
+            "item": [
+                {
+                    "title": "Do Something!",
+                }
+            ]
+        },
+        {
+            "id": "_done",
+            "title": "Done",
+            "class": "success",
+            "item": [
+                {
+                    "title": "All right",
+                },
+            ]
+        }
+    ]
+});
+
+var toDoButton = document.getElementById('addToDo');
+toDoButton.addEventListener('click', function () {
+    KanbanTest.addElement(
+        "_todo",
+        {
+            "title": "Test Add",
+        }
+    );
+});
+
+// var addBoardDefault = document.getElementById('addDefault');
+// addBoardDefault.addEventListener('click', function () {
+//     KanbanTest.addBoards(
+//         [{
+//             "id": "_default",
+//             "title": "Kanban Default",
+//             "item": [
+//                 {
+//                     "title": "Default Item",
+//                 },
+//                 {
+//                     "title": "Default Item 2",
+//                 },
+//                 {
+//                     "title": "Default Item 3",
+//                 }
+//             ]
+//         }]
+//     )
+// });
+
+// var removeBoard = document.getElementById('removeBoard');
+// removeBoard.addEventListener('click', function () {
+//     KanbanTest.removeBoard('_done');
+// });
+
+// var removeElement = document.getElementById('removeElement');
+// removeElement.addEventListener('click', function () {
+//     KanbanTest.removeElement('_test_delete');
+// });
+
+var allEle = KanbanTest.getBoardElements('_todo');
+allEle.forEach(function (item, index) {
+    //console.log(item);
+})
+</script>
+</body>
+</html>
 {% endblock %}

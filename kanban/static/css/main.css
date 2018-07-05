@@ -7,3 +7,24 @@ body {
 a, a:hover, a:visited {
     color: magenta;
 }
+
+#myKanban {
+    overflow-x: auto;
+    padding: 20px 0;
+}
+
+.success {
+    background: #00B961;
+}
+
+.info {
+    background: #2A92BF;
+}
+
+.warning {
+    background: #F4CE46;
+}
+
+.error {
+    background: #FB7D44;
+}
