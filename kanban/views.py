@@ -68,9 +68,9 @@ def issue_detail(request, path, issue_id):
     Mostra informações detalhadas da issue.
     """
     ctx = {
-        'issue': board_from_path(path).issues.filter(id=issue_id),
+        'issue': board_from_path(path).issues.get(id=issue_id),
     }
-    return render(request, 'kanban/issue-detail.html', ctx)
+    return render(request, 'kanban/issue_detail.html', ctx)
 
 def create_issue(request, path):
     """
@@ -78,9 +78,9 @@ def create_issue(request, path):
     """
     board = board_from_path(path)
     form = IssueCreateForm()
-
+    print(request)
     if request.method == 'POST':
-        form = IssueCreateForm(request.POST)
+        form = IssueCreateForm(request.POST, request.FILES)
         if form.is_valid():
             issue = form.save(commit=False)
             issue.board = board

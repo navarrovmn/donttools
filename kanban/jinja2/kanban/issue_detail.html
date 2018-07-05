@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
 
+
 {% block body %}
-    <h1>Board!</h1>
+<h1>{{ issue.title }}</h1>
+    {% if issue.image  %}
+        <a href="#">
+            <img class="img-responsive" src='{{ issue.image.url }}' alt="">
+        </a>       
+    {% endif %}
+<p>{{ issue.description }}</p>
     {{ super() }}
 {% endblock %}

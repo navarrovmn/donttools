@@ -3,6 +3,15 @@
 {{ super() }}
 
 <body>
+    {% if form %}
+        <form action="" method="post" enctype="multipart/form-data">
+            {{ csrf_input }}
+            <table>
+                {{ form.as_table() }}
+            </table>
+            <button type="submit">Enviar</button>
+        </form>
+    {% endif %}
     <section class="section">
         <h1>Board Name</h1>
     </section>
@@ -15,7 +24,10 @@
                 <div class="drag-options" id="options1"></div>
                 <ul class="drag-inner-list" id="todo">
                     {% for i in todo %}
-                        <li class="drag-item" id="{{i.id}}">{{ i }}</li>
+                        <li class="drag-item" id="{{i.id}}">
+                            {{ i }}
+                            <a href="{{path}}/issue/{{i.id}}"> <i class="fa fa-eye"></i></a>
+                        </li>
                     {% endfor %}
                 </ul>
             </li>
@@ -26,7 +38,10 @@
                 <div class="drag-options" id="options2"></div>
                 <ul class="drag-inner-list" id="doing">
                     {% for i in doing %}
-                        <li class="drag-item" id="{{i.id}}">{{ i }}</li>
+                        <li class="drag-item" id="{{i.id}}">
+                            {{ i }}
+                            <a href="{{path}}/issue/{{i.id}}"> <i class="fa fa-eye"></i></a>
+                        </li>
                     {% endfor %}
                 </ul>
             </li>
@@ -43,7 +58,10 @@
                 <div class="drag-options" id="options3"></div>
                 <ul class="drag-inner-list" id="done">
                     {% for i in done %}
-                        <li class="drag-item" id="{{i.id}}">{{ i }}</li>
+                        <li class="drag-item" id="{{i.id}}">
+                            {{ i }}
+                            <a href="{{path}}/issue/{{i.id}}"> <i class="fa fa-eye"></i></a>
+                        </li>
                     {% endfor %}
                 </ul>
             </li>
@@ -62,6 +80,8 @@
             -->
         </ul>
     </div>
+
+
     <a href="{{path}}/issue"><button>Criar issue</button></a>
     <script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/45226/dragula.min.js'></script>
     <script src="../../static/js/index.js"></script>
