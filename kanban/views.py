@@ -1,4 +1,6 @@
 from django.shortcuts import render, get_object_or_404, get_list_or_404
+from .models import *
+from .forms import IssueCreateForm
 
 
 def index(request):
@@ -11,7 +13,7 @@ def index(request):
 def board(request, path):
     """
     Mostra um quadro Kanban completo com as colunas de To-do, Doing e Done.
-    
+
     Oculta as issues escondidas.
     """
     ctx = {
@@ -50,6 +52,38 @@ def issue_detail(request, path, issue_id):
     return render(request, 'kanban/issue-detail.html', ctx)
 
 
+def create_issue(request, path):
+    """
+    Cria uma issue.
+    """
+    print("8"*800)
+    print(request)
+    print(dir(request))
+
+    board = board_from_path(path)
+
+    if request.method == 'POST':
+        form = IssueCreateForm(request.POST)
+        if form.is_valid():
+            issue = form.save(commit=False)
+            issue.board = board
+            issue.is_active = True
+            issue.save()
+    else:
+        form = IssueCreateForm()
+        ctx = {
+            'board': board,
+            'form': form,
+        }
+        return render(request, 'kanban/board.html', ctx)
+
+    ctx = {
+        'board': board,
+    }
+
+    return render(request, 'kanban/board.html', ctx)
+
+
 def issue_edit(request, path, issue_id):
     """
     Edita issue.
@@ -61,4 +95,4 @@ def issue_edit(request, path, issue_id):
 
 
 def board_from_path(path):
-    return NotImplemented
+    return Board.objects.get_or_create(title=path)[0]

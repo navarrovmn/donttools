@@ -11,14 +11,22 @@
 
 <body>
 {% block body %}
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
     {% if body is defined %}
         {{ body | default('Funcionou!') }}
     {% else %}
         <p>Defina o block "body" ou a variável "body" no seu template.</p>
     {% endif %}
+    {% if form %}
+        <form action="" method="post">
+            {{csrf_input}}
+            {{form.as_p()}}
+            <button type="submit">Enviar</button>
+        </form>
+    {% endif %}
 {% endblock %}
 
-<script> 
+<script>
 </script>
 </body>
 </html>

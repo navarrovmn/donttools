@@ -16,9 +16,9 @@ class Issue(models.Model):
     ]
     KIND_MAP = dict(KIND_CHOICES)
 
+    board = models.ForeignKey(Board, related_name='issues', on_delete=models.CASCADE)
     title = models.CharField(max_length=140)
     kind = models.PositiveIntegerField(choices=KIND_CHOICES)
     kind_name = property(lambda self: self.kind_display())
     description = models.TextField()
     is_active = models.BooleanField()
-    status = models.CharField(max_length=140)
