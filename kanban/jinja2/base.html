@@ -8,12 +8,16 @@
     <script src="/static/js/jquery.js"></script>
     <script src="/static/js/unpoly.js"></script>
     <script src="/static/js/main.js"></script>
-    <script src="/static/js/bootstrap.min.js"></script>
+    <!-- <script src="/static/js/bootstrap.min.js"></script> -->
+    
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" href="../../static/css/style.css">
 </head>
 
 <body>
 {% block body %}
-    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
     {% if body is defined %}
         {{ body | default('Funcionou!') }}
     {% else %}
@@ -21,8 +25,10 @@
     {% endif %}
     {% if form %}
         <form action="" method="post">
-            {{csrf_input}}
-            {{form.as_p()}}
+            {{ csrf_input }}
+            <table>
+                {{ form.as_table() }}
+            </table>
             <button type="submit">Enviar</button>
         </form>
     {% endif %}

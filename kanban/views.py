@@ -1,7 +1,10 @@
 
-from django.shortcuts import render, get_object_or_404, get_list_or_404
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
+from django.views.decorators.csrf import csrf_exempt
 from .models import *
 from .forms import IssueCreateForm, IssueEditForm
+import json
+from django.http import JsonResponse
 
 
 def index(request):
@@ -18,12 +21,15 @@ def board(request, path):
     Oculta as issues escondidas.
     """
     board = board_from_path(path)
-    issues = Issue.objects.filter(board=board, is_active=True)
-    
+
     ctx = {
         'board': board,
-        'issues': issues,
+        'path': path,
+        'todo': get_issues(board, 0),
+        'doing': get_issues(board, 1),
+        'done': get_issues(board, 2)
     }
+
     return render(request, 'kanban/board.html', ctx)
 
 
@@ -71,6 +77,7 @@ def create_issue(request, path):
     Cria uma issue.
     """
     board = board_from_path(path)
+    form = IssueCreateForm()
 
     if request.method == 'POST':
         form = IssueCreateForm(request.POST)
@@ -78,19 +85,14 @@ def create_issue(request, path):
             issue = form.save(commit=False)
             issue.board = board
             issue.is_active = True
+            issue.kind = 0
             issue.save()
-    else:
-        form = IssueCreateForm()
-        ctx = {
-            'board': board,
-            'form': form,
-        }
-        return render(request, 'kanban/board.html', ctx)
+            return redirect('/' + path)
 
     ctx = {
         'board': board,
+        'form': form,
     }
-
     return render(request, 'kanban/board.html', ctx)
 
 
@@ -98,26 +100,22 @@ def issue_edit(request, path, issue_id):
     """
     Edita issue.
     """
-    if request.method == 'POST':
-        form = IssueCreateForm(request.POST)
-        if form.is_valid():
-            issue = form.save(commit=False)
-            issue.board = board
-            issue.is_active = True
-            issue.save()
-    else:
-        form = IssueEditForm()
-        ctx = {
-            'board': board,
-            'form': form,
-        }
-        return render(request, 'kanban/board.html', ctx)
 
-    ctx = {
-        'board': board,
+@csrf_exempt
+def update_kind(request):
+    """
+    Update issue kind.
+    """
+    kinds = {
+        "todo": 0,
+        "doing": 1,
+        "done": 2
     }
-    return render(request, 'kanban/board.html', ctx)
-
+    data = json.loads(request.body.decode("utf-8"))
+    issue = Issue.objects.get(id=data["issue_id"])
+    issue.kind = kinds[data["new_kind"]]
+    issue.save()
+    return JsonResponse({"result": "ok"})
 
 def board_from_path(path):
     return Board.objects.get_or_create(title=path)[0]

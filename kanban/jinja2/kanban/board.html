@@ -1,206 +1,70 @@
-{% extends 'base.html' %}
-
+{% extends 'base.html' %} 
 {% block body %}
-    <h1>Board!</h1>
-    {% for issue in issues %}
-        <p>{{issue.title}}</p>
-        {% if issue.image  %}
-            <a href="#">
-                <img class="img-responsive" src='{{ issue.image.url }}' alt="">
-            </a>       
-        {% endif %}
-    {% endfor %}
-    {{ super() }}
+{{ super() }}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>Title</title>
-    <link rel="stylesheet" href="../../static/css/jkanban.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
-
-    <style>
-    </style>
-</head>
 <body>
-<div id="myKanban"></div>
-
-
-<!-- <button id="addDefault">Add "Default" board</button>
-<br> -->
-
-<button id="addToDo">Add element in "To Do" Board</button>
-<br>
-
-<!-- <button id="removeBoard">Remove "Done" Board</button>
-<br> -->
-
-<!-- <button id="removeElement">Remove "My Task Test"</button>
-<br> -->
-
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-    Launch demo modal
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="modalDetail" tabindex="-1" role="dialog" aria-labelledby="modalDetailLabel" aria-hidden="true">
-<div class="modal-dialog" role="document">
-    <div class="modal-content">
-    <div class="modal-header">
-        <h5 class="modal-title" id="modalDetailLabel">Issue</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-        </button>
+    <section class="section">
+        <h1>Board Name</h1>
+    </section>
+    <div class="drag-container">
+        <ul class="drag-list">
+            <li class="drag-column drag-column-on-hold">
+                <span class="drag-column-header">
+                    <h2>To Do</h2>
+                </span>
+                <div class="drag-options" id="options1"></div>
+                <ul class="drag-inner-list" id="todo">
+                    {% for i in todo %}
+                        <li class="drag-item" id="{{i.id}}">{{ i }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+            <li class="drag-column drag-column-in-progress">
+                <span class="drag-column-header">
+                    <h2>Doing</h2>
+                </span>
+                <div class="drag-options" id="options2"></div>
+                <ul class="drag-inner-list" id="doing">
+                    {% for i in doing %}
+                        <li class="drag-item" id="{{i.id}}">{{ i }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+            <li class="drag-column drag-column-needs-review">
+                <span class="drag-column-header">
+                    <h2>Done</h2>
+                    <!-- 
+                        <svg data-target="options3" class="drag-header-more" fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24">
+                            <path d="M0 0h24v24H0z" fill="none" />
+                            <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                        /</svg>
+                    -->
+                </span>
+                <div class="drag-options" id="options3"></div>
+                <ul class="drag-inner-list" id="done">
+                    {% for i in done %}
+                        <li class="drag-item" id="{{i.id}}">{{ i }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+            <!--
+                <li class="drag-column drag-column-approved">
+                    <span class="drag-column-header">
+                        <h2>Approved</h2>
+                        <svg data-target="options4" class="drag-header-more" fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/</svg>
+                    </span>
+                    <div class="drag-options" id="options4"></div>
+                    <ul class="drag-inner-list" id="4">
+                        <li class="drag-item"></li>
+                        <li class="drag-item"></li>
+                    </ul>
+                </li>
+            -->
+        </ul>
     </div>
-    <div class="modal-body">
-        <div class="form-group">
-            <label>Title</label>
-            <input type="text" class="form-control" rows="2" autofocus></input>
-        </div>
-
-        <div class="form-group">
-            <label>Description</label>
-            <textarea class="form-control" rows="2" autofocus></textarea>
-        </div>
-
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-xs pull-right">Submit</button>
-        </div>
-    </div>
-    </div>
-</div>
-</div>
-
-
-<script src="../../static/js/jkanban.min.js"></script>
-<script>
-
-$()
-var KanbanTest = new jKanban({
-    element: '#myKanban',
-    gutter: '10px',
-    widthBoard: '450px',
-    click: function (el) {
-        // $('#modalDetail').modal();
-    },
-
-    buttonClick: function (el, boardId) {
-        // $('#modalDetail').modal();
-
-        var formItem = document.createElement('form');
-        formItem.setAttribute("class", "itemform");
-        formItem.innerHTML = '<div class="form-group"><textarea class="form-control" rows="2" autofocus></textarea></div><div class="form-group"><button type="submit" class="btn btn-primary btn-xs pull-right">Submit</button><button type="button" id="CancelBtn" class="btn btn-default btn-xs pull-right">Cancel</button></div>'
-        KanbanTest.addForm(boardId, formItem);
-
-        formItem.addEventListener("submit", function (e) {
-            e.preventDefault();
-            var text = e.target[0].value
-            KanbanTest.addElement(boardId, {
-                "title": "Title",
-                "description": text,
-            })
-            formItem.parentNode.removeChild(formItem);
-        });
-        document.getElementById('CancelBtn').onclick = function () {
-            formItem.parentNode.removeChild(formItem)
-        }
-    },
-    addItemButton: true,
-    boards: [
-        {
-            "id": "_todo",
-            "title": "To Do",
-            "class": "info",
-            "item": [
-                {
-                    "id": "_test_delete",
-                    "title": "First task",
-                    "drag": function (el, source) {
-                        console.log("START DRAG: " + el.dataset.eid);
-                    },
-                    "dragend": function (el) {
-                        console.log("END DRAG: " + el.dataset.eid);
-                        // ajax put aqui
-                    },
-                    "drop": function(el, dest){
-                        console.log('DROPPED: ' + el.dataset.eid )
-                        console.log('dest' + el)
-                    }
-                },
-            ]
-        },
-        {
-            "id": "_doing",
-            "title": "Doing",
-            "class": "warning",
-            "item": [
-                {
-                    "title": "Do Something!",
-                }
-            ]
-        },
-        {
-            "id": "_done",
-            "title": "Done",
-            "class": "success",
-            "item": [
-                {
-                    "title": "All right",
-                },
-            ]
-        }
-    ]
-});
-
-var toDoButton = document.getElementById('addToDo');
-toDoButton.addEventListener('click', function () {
-    KanbanTest.addElement(
-        "_todo",
-        {
-            "title": "Test Add",
-        }
-    );
-});
-
-// var addBoardDefault = document.getElementById('addDefault');
-// addBoardDefault.addEventListener('click', function () {
-//     KanbanTest.addBoards(
-//         [{
-//             "id": "_default",
-//             "title": "Kanban Default",
-//             "item": [
-//                 {
-//                     "title": "Default Item",
-//                 },
-//                 {
-//                     "title": "Default Item 2",
-//                 },
-//                 {
-//                     "title": "Default Item 3",
-//                 }
-//             ]
-//         }]
-//     )
-// });
-
-// var removeBoard = document.getElementById('removeBoard');
-// removeBoard.addEventListener('click', function () {
-//     KanbanTest.removeBoard('_done');
-// });
-
-// var removeElement = document.getElementById('removeElement');
-// removeElement.addEventListener('click', function () {
-//     KanbanTest.removeElement('_test_delete');
-// });
-
-var allEle = KanbanTest.getBoardElements('_todo');
-allEle.forEach(function (item, index) {
-    //console.log(item);
-})
-</script>
+    <a href="{{path}}/issue"><button>Criar issue</button></a>
+    <script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/45226/dragula.min.js'></script>
+    <script src="../../static/js/index.js"></script>
 </body>
-</html>
+
 {% endblock %}
